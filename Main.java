@@ -1,114 +1,118 @@
-/*
-* @author Alejandra Gudiel 19232
+ /*
+* Universidad del Valle de Guatemala
+* Algoritmos y estructuras de datos
+* Proyecto 1
 * @author Diego Crespo 19541
+* @author Alejandra GUdiel 19232
 * @author Juan Pablo Pineda 19087
-* Clase: 
+* Clase encargada de: mostrar la interfaz al usuario para usar lISP
 */
 
 package main;
 
+import main.CreateParser;
 import java.util.Scanner;
 
-//Clase para mostrar menu al usuario
+
 public class Main {
-	public static void main(final String args[]) {
-        // Programcion defensiva
-        int selectedOption = 0;
+	public static void main(String args[]) {
+		
+		int selectedOption = 0;
 
-        // Mientras el usuario no eliga la opcion 2
+		//comienza a  recorrer el menu
         while (selectedOption != 2) {
-            // Mostrar menu
             printMenu();
-            try {
-                // Nuevo Scanner
-                final Scanner scannerInput = new Scanner(System.in);
 
-                // Switch para los posibles casos
+            //progra defensiva
+            try {
+                Scanner scannerInput = new Scanner(System.in);
+
+                try {
+                	//se parsea la opcion ingrsada
+                    selectedOption = Integer.parseInt(scannerInput.nextLine());
+                } catch (Exception e) {
+                    throw new Exception("Sólo se permiten números :/ ");
+                }
+
+                //switch para las opciones
                 switch (selectedOption) {
                     case 1:
-                        // Pasar a metodo de operate
+                    	//ingresar una operacion
                         operate(scannerInput);
                         break;
                     case 2:
-                        // Pasar a metodo de exitProgram
+                    	//salir del progama
                         exitProgram(scannerInput);
                     default:
-                        // Mensaje de error
-                        throw new Exception("Invalid option");
+                        throw new Exception("Opción inválida :( ");
                 }
-            } catch (final Exception e) {
-                // Seguir desplegando mensaje hasta que ingrese opcion valida
-                System.out.print("Enter your option:> " + e.getMessage());
+            } catch (Exception e) {
+            	//Seguir desplegando mensaje hasta que ingrese opcion valida
+                System.out.print("Ingrese una opcion >> " + e.getMessage());
                 System.out.println("");
                 System.out.println("");
             }
         }
     }
 
-    // Metodo para mostrar menu principal al usuario
+	//se despliega el menú principal
     private static void printMenu() {
-        System.out.println("===================================");
-        System.out.println("==============  Menu ==============");
-        System.out.println("===================================");
-        System.out.println("Select one of the next options ");
-        System.out.println("	1. Enter operation");
+        System.out.println("======================================================================");
+        System.out.println("===================  Bienvenido al sistema LISP ======================");
+        System.out.println("======================================================================");
+        System.out.println("Seleccione una opción: ");
+        System.out.println("	1. Ingresar operación ");
         System.out.println("	2. Exit");
         System.out.println("");
-        System.out.print("Enter your option:> ");
+        System.out.print("Ingrese una opcion >> ");
     }
 
-    // Metodo para que usuario ingrese operacion en Lenguje Lisp
-    private static void operate(final Scanner scannerInput) {
-        // Desplegar mensajes
+    //método para ingresar la operacion
+    private static void operate(Scanner scannerInput) {
         System.out.println("");
-        System.out.println("Enter operation, to exit this option enter 'exit'");
+        System.out.println("Ingrese una operación \n Si desea salir escriba: exit ");
 
-        // Mientras el usuario no ingese "exit"
+        //ciclo while para ejecutar las operaciones hasta que el usuario no lo desee
         while (true) {
-            // Mostrar mensaje
-            System.out.print("lisp:> ");
+            System.out.print("LISP >> ");
 
             String lispOperation = "";
             while (scannerInput.hasNextLine()) {
-                // Usuario ingresa operacion
-                final String inputNext = scannerInput.nextLine();
+                String inputNext = scannerInput.nextLine();
                 lispOperation += inputNext;
 
-                // Si el usuario no ingresa nada "enter"
                 if (inputNext.length() > 0) {
-                    // volver a anterior while
+                	//volver a anterior while
                     break;
                 }
             }
 
-            // Si el usuario ingresa exit
+            //ciclo if para salir del sistema
             if (lispOperation.startsWith("exit")) {
                 System.out.println("");
                 System.out.println("");
-                // Regresa a menu principal
+                
                 return;
             }
 
+            //progra defensiva
             try {
-                // Tratar de hacer parse a Operacion ingresada
-                final String result = ParserService.getInstance().parseMultipleOperation(lispOperation);
-                // Desplegar cualquier resultado obtenido
-                System.out.println("lisp:> " + result);
-            } catch (final Exception e) {
-                // mensaje de error
-                System.out.println("lisp:> " + e.getMessage());
+            	//se hace parse para realizar la función
+                String result = CreateParser.getInstance().parseMultipleOperation(lispOperation);
+                //desplegar el resultado obtenido
+                System.out.println("LISP >> " + result);
+            } catch (Exception e) {
+                System.out.println("LISP >> " + e.getMessage());
             }
         }
     }
 
-    // Funcion para salir del programa
-    private static void exitProgram(final Scanner scannerInput) {
-    	//Cerrar scanner
+    //funcón para salir del programa
+    private static void exitProgram(Scanner scannerInput) {
+    	
         scannerInput.close();
-        //Mensaje de despedida
         System.out.println("");
-        System.out.println("Thanks for using this program");
-        //Terminar todos los procesos
+        System.out.println("Regrese pronto :) ");
         System.exit(1);
     }
 }
