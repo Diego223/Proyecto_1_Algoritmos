@@ -1,0 +1,4 @@
+//programa de ejemplo de funcionamiento para usar en lisp
+//el programa realiza una conversión de farenheit a grados :) 
+
+(defun grados (a) (+ 32 (* a 1.8)))
