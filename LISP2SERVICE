@@ -1,0 +1,76 @@
+
+
+package main;
+
+import main.service.lisp.DefunService;
+import java.text.DecimalFormat;
+import java.util.Optional;
+
+
+public class LispService {
+	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,###.##");
+    private static LispService LispS;
+
+    private LispService() {
+    }
+
+    public static LispService getInstance() {
+        if (LispS == null) {
+            LispS = new LispService();
+        }
+        return LispS;
+    }
+
+    public String operateLisp(String[] componentes) throws Exception {
+        String operador = componentes[0];
+
+        switch (operador) {
+            case "+":
+            case "-":
+            case "*":
+            case "/":
+                Double resp = processArithmeticOperation(operador, componentes[1], componentes[2]);
+                return DECIMAL_FORMAT.format(resp);
+            case "eq":
+                return "" + processEqualityOperation(componentes[1], componentes[2]);
+
+            case ">":
+            case "<":
+            case "==":
+            case "!=":
+                return "" + processConditionalOperation(operador, componentes[1], componentes[2]);
+
+            default:
+                final Optional<DefunService.Function> optionalDefun = DefunService.getInstance().getDefun(operador);
+                if (optionalDefun.isPresent()) {
+                    return DefunService.getInstance().operateDefunFunctionLisp(optionalDefun.get(), componentes);
+                }
+                
+                throw new Exception(operador + " - operador not supported");
+        }
+    }
+
+    private boolean processConditionalOperation(String operador, String nOne, String nTwo) throws Exception {
+        Double[] nums = new Double[2];
+        nums[0] = ParserService.getInstance().parseParameter(nOne);
+        nums[1] = ParserService.getInstance().parseParameter(nTwo);
+
+        //Realizar operaciones correspondientes
+        switch (operador) {
+            case ">":
+                return nums[0] > nums[1];
+            case "<":
+                return nums[0] < nums[1];
+            case "==":
+                return nums[0].equals(nums[1]);
+            case "!=":
+                return !nums[0].equals(nums[1]);
+            default:
+                throw new Exception(operador + " - operador not supported");
+        }
+    }
+
+    private boolean processEqualityOperation(String parameterOne, String parameterTwo) {
+        return parameterOne.equals(parameterTwo);
+    }
+
